@@ -13,7 +13,7 @@ public with sharing class ApplicantHandler {
         for (Job_Application__c jobApp : applicantions){
 
             Lead tmpLead = new Lead();
-
+            System.debug(JSON.serializePretty(jobApp));
             for (Form_to_Lead_Map__mdt fieldMap : formToLeadFields){
                 String leadFieldName = fieldMap.Lead_Field_API_Name__c;
                 String jobAppFieldName = fieldMap.Form_Field_API_Name__c;
@@ -25,6 +25,12 @@ public with sharing class ApplicantHandler {
             
         insert newLeads;
         return newLeads;
+    }
+
+    public static void enhanceJobAppData(Job_Application__c[] jobApps){
+        for (Job_Application__c jobApp : jobApps){
+            jobApp.Candidate__r = [SELECT Id, Email__c FROM Candidate__c WHERE Id = :jobApp.Candidate__c];
+        }
     }
 }
 
