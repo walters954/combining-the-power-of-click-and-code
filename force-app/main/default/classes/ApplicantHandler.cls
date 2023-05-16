@@ -17,7 +17,10 @@ public with sharing class ApplicantHandler {
             for (Form_to_Lead_Map__mdt fieldMap : formToLeadFields){
                 String leadFieldName = fieldMap.Lead_Field_API_Name__c;
                 String jobAppFieldName = fieldMap.Form_Field_API_Name__c;
-                tmpLead.put(leadFieldName,jobApp.get(jobAppFieldName));
+                Map<String, Object> jobMap = (Map<String, Object>) JSON.deserializeUntyped(JSON.serialize(jobApp)); 
+                if (jobMap.containsKey(jobAppFieldName)) {
+                    tmpLead.put(leadFieldName,jobApp.get(jobAppFieldName));
+                }
             }
             System.debug(tmpLead);
             newLeads.add(tmpLead);
